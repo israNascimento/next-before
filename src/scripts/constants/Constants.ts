@@ -10,4 +10,5 @@ export const CARD_MARGIN = 20;
 export const FONT_SIZE_GAME_OPTION = 40;
 export const FONT_SIZE_GAME_GUI = 20;
 export const TIMEOUT_RESULT = 1000;
-export const GAME_TIME = 60000;
+export const GAME_TIME = 6000;
+export const GAME_UPDATE_INTERVAL = 25;

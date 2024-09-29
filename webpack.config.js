@@ -28,7 +28,7 @@ module.exports = {
       template: "src/custom.html",
     }),
     new CopyPlugin({
-      patterns: [{ from: "src/img", to: "img" }],
+      patterns: [{ from: "src/img", to: "img" }, {from: "src/sounds", to: "sounds"}],
     }),
   ],
 

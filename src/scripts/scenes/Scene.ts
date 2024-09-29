@@ -8,17 +8,19 @@ export default class Scene {
   }
   handleClick: (x: number, y: number) => void;
 
-  drawScene(): void {
+  update(): void {
     this.#context.clearRect(0, 0, WIDTH, HEIGHT);
   }
 
-  protected drawRect(): void {
-    this.#context.fillStyle = "white";
-    this.#context.strokeRect(0, 0, 800, 600);
+  protected drawRect(color: string = "green"): void {
+    this.#context.fillStyle = color;
+    this.#context.fillRect(0, 0, 800, 600);
   }
 
   protected drawImage(bitmap: ImageBitmap, x: number, y: number): void {
-    this.#context.drawImage(bitmap, x, y);
+    if (bitmap) {
+      this.#context.drawImage(bitmap, x, y);
+    }
   }
 
   protected drawText(
@@ -27,11 +29,13 @@ export default class Scene {
     y: number,
     align: CanvasTextAlign,
     fontSize: number = 25,
-    textColor: string = "#3B3B3B"
+    textColor: string = "#0A0A0A"
   ) {
     this.#context.fillStyle = textColor;
     this.#context.font = `${fontSize}px Arial`;
     this.#context.textAlign = align;
     this.#context.fillText(text, x, y + fontSize);
   }
+
+  protected navigate() {}
 }

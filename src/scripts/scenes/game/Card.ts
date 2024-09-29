@@ -4,15 +4,9 @@ import CardPosition from "./CardPosition";
 export default class Card {
   id: number;
   position: CardPosition;
-  bitmap: ImageBitmap;
 
   constructor(id: number) {
     this.id = id;
-    const image = new Image();
-    image.src = `/img/${id}.png`;
-    image.onload = async () => {
-      this.bitmap = await createImageBitmap(image);
-    };
   }
 
   setPosition(position: CardPosition) {
@@ -20,6 +14,7 @@ export default class Card {
   }
 
   hadClick(clickX: number, clickY: number): boolean {
+    console.log(clickX, clickY);
     if (
       clickX > this.position.x &&
       clickY > this.position.y &&

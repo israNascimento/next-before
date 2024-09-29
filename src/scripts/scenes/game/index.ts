@@ -7,11 +7,14 @@ import {
   FONT_SIZE_GAME_GUI,
   FONT_SIZE_GAME_OPTION,
   GAME_TIME,
+  GAME_UPDATE_INTERVAL,
   SECOND_ROW_POS_Y,
   TIMEOUT_RESULT,
   WIDTH,
 } from "../../constants/Constants";
+import ImageLoader from "../../utils/ImageLoader";
 import Scene from "../Scene";
+import SceneManager from "../SceneManager";
 import Card from "./Card";
 import CardPosition from "./CardPosition";
 import { Position, Result } from "./Types";
@@ -21,14 +24,13 @@ export default class GameScene extends Scene {
   #timeLeft: number;
   #currentOption: {
     option: number;
-    bitmap: ImageBitmap;
     positionToDiscover: Position;
   };
   #points: number;
   #possiblesCardsPosition: CardPosition[];
-  #updateInterval: NodeJS.Timeout;
   #canClick: Boolean;
   #result?: Result;
+  #backgroundSound: HTMLAudioElement;
 
   constructor(context: CanvasRenderingContext2D) {
     super(context);
@@ -44,21 +46,22 @@ export default class GameScene extends Scene {
     this.#timeLeft = GAME_TIME;
     this.#points = 0;
     this.#canClick = true;
-    this.#updateInterval = setInterval(() => {
-      this.#update();
-    }, 25);
+    this.#backgroundSound = new Audio("./sounds/background.mp3");
+    this.#backgroundSound.volume = 0.7;
+    this.#backgroundSound.play();
   }
 
-  #update = () => {
+  override update = () => {
+    super.update();
     if (this.#timeLeft <= 0) {
-      clearTimeout(this.#updateInterval);
-      alert(
-        `Parabéns, você fez ${this.#points} pontos! Aperte OK para recarregar`
-      );
-      window.location.reload();
+      this.#backgroundSound.pause();
+      SceneManager.getInstace().navigateToEnd();
     }
-    this.#timeLeft -= 25;
-    this.drawScene();
+    this.#timeLeft -= GAME_UPDATE_INTERVAL;
+    this.#drawBackground();
+    this.#drawCards();
+    this.#drawOption();
+    this.#drawGui();
   };
 
   #generatePositions = (index: number): CardPosition => {
@@ -73,14 +76,9 @@ export default class GameScene extends Scene {
 
   #generateOption = async () => {
     const option = Math.floor(Math.random() * this.#cards.length);
-    const image = new Image();
-    image.src = `/img/${option}.png`;
-    image.onload = async () => {
-      this.#currentOption = {
-        option: option,
-        bitmap: await createImageBitmap(image),
-        positionToDiscover: this.#getPositionToDiscover(option),
-      };
+    this.#currentOption = {
+      option: option,
+      positionToDiscover: this.#getPositionToDiscover(option),
     };
   };
 
@@ -97,6 +95,7 @@ export default class GameScene extends Scene {
   };
 
   override handleClick = (x: number, y: number) => {
+    console.log("handleClick");
     if (this.#canClick) {
       const clickedCard = this.#findClickedCard(x, y);
       if (clickedCard != undefined) {
@@ -115,7 +114,11 @@ export default class GameScene extends Scene {
             this.#result = "wrong";
           }
         }
-
+        if (this.#result == "correct") {
+          new Audio("./sounds/correct.mp3").play();
+        } else {
+          new Audio("./sounds/wrong.wav").play();
+        }
         this.#shuffleCards();
         this.#generateOption();
         this.#canClick = false;
@@ -135,25 +138,17 @@ export default class GameScene extends Scene {
   }
 
   #findClickedCard = (x: number, y: number) => {
+    console.log("findclick");
     return this.#cards.find((card) => {
       return card.hadClick(x, y);
     });
   };
 
-  override drawScene = () => {
-    super.drawScene();
-    this.#drawBackground();
-    this.#drawCards();
-    this.#drawOption();
-    this.#drawGui();
-  };
-
   #drawCards = () => {
     this.#cards.forEach((card, index) => {
-      if (card.bitmap) {
-        card.setPosition(this.#possiblesCardsPosition[index]);
-        this.drawImage(card.bitmap, card.position.x, card.position.y);
-      }
+      const cardImage = ImageLoader.loadImage(`./img/${card.id}.png`);
+      card.setPosition(this.#possiblesCardsPosition[index]);
+      this.drawImage(cardImage, card.position.x, card.position.y);
     });
   };
 
@@ -166,7 +161,11 @@ export default class GameScene extends Scene {
         "left",
         FONT_SIZE_GAME_OPTION
       );
-      this.drawImage(this.#currentOption.bitmap, 600, CARD_MARGIN);
+      this.drawImage(
+        ImageLoader.loadImage(`./img/${this.#currentOption.option}.png`),
+        600,
+        CARD_MARGIN
+      );
     }
   };
 
@@ -223,6 +222,6 @@ export default class GameScene extends Scene {
   };
 
   #drawBackground = () => {
-    this.drawRect();
+    this.drawImage(ImageLoader.loadImage("./img/background.png"), 0, 0);
   };
 }

@@ -6,12 +6,11 @@ class GameManager {
   #sceneManager: SceneManager;
 
   constructor() {
-    this.#sceneManager = new SceneManager(this.#ctx);
+    this.#sceneManager = SceneManager.Instance(this.#ctx);
     this.init();
   }
 
   init() {
-    this.#sceneManager.currentScene.drawScene();
     this.#canvas.addEventListener(
       "click",
       (ev: MouseEvent) => {
