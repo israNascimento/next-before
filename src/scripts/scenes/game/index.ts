@@ -34,7 +34,7 @@ export default class GameScene extends Scene {
   #backgroundSound: HTMLAudioElement;
   #timeoutResultGui?: NodeJS.Timeout;
 
-  constructor(context: CanvasRenderingContext2D) {
+  constructor(context: CanvasRenderingContext2D, timeToFinish: number) {
     super(context);
     this.#cards = [];
     this.#possiblesCardsPosition = [];
@@ -45,17 +45,18 @@ export default class GameScene extends Scene {
     this.#shuffleCards();
 
     this.#generateOption();
-    this.#timeLeft = GAME_TIME;
+    this.#timeLeft = timeToFinish;
     this.#points = 0;
     this.#canClick = true;
     this.#backgroundSound = new Audio("./sounds/background.mp3");
-    this.#backgroundSound.volume = 0.6;
+    this.#backgroundSound.volume = 0.5;
     this.#backgroundSound.play();
+    this.#backgroundSound.loop = true;
   }
 
   override update = () => {
     super.update();
-    if (this.#timeLeft <= 0) {
+    if (this.#timeLeft <= 50) {
       this.#backgroundSound.pause();
       SceneManager.getInstace().navigateToEnd();
     }
@@ -105,6 +106,9 @@ export default class GameScene extends Scene {
             this.#points += 100;
             this.#result = "correct";
           } else {
+            if (this.#points > 0) {
+              this.#points -= 50;
+            }
             this.#result = "wrong";
           }
         } else {
@@ -112,6 +116,9 @@ export default class GameScene extends Scene {
             this.#points += 100;
             this.#result = "correct";
           } else {
+            if (this.#points > 0) {
+              this.#points -= 50;
+            }
             this.#result = "wrong";
           }
         }

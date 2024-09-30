@@ -3,7 +3,7 @@ import SceneManager from "../SceneManager";
 
 export default class FinishScene extends Scene {
   handleClick = (x: number, y: number) => {
-    SceneManager.getInstace().navigateToGame();
+    SceneManager.getInstace().navigateToTimeSelect();
   };
 
   update = () => {

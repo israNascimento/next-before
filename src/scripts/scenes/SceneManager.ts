@@ -2,6 +2,7 @@ import FinishScene from "./finish/index";
 import GameScene from "./game/index";
 import MenuScene from "./menu/index";
 import IScene from "./Scene";
+import TimeSelect from "./timeselect/index";
 
 export default class SceneManager {
   currentScene: IScene;
@@ -17,12 +18,20 @@ export default class SceneManager {
     }, 25);
   }
 
-  navigateToGame = () => {
-    this.currentScene = new GameScene(this.#context);
+  navigateToGame = (selectedTime: number) => {
+    this.currentScene = new GameScene(this.#context, selectedTime);
+  };
+
+  navigateToTimeSelect = () => {
+    this.currentScene = new TimeSelect(this.#context);
   };
 
   navigateToEnd = () => {
     this.currentScene = new FinishScene(this.#context);
+  };
+
+  navigateToMenu = () => {
+    this.currentScene = new MenuScene(this.#context);
   };
 
   fowardClick = (x: number, y: number) => {

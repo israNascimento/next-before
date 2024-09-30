@@ -4,19 +4,29 @@ import MenuItem from "../components/MenuItem";
 import Scene from "../Scene";
 import SceneManager from "../SceneManager";
 
-export default class MenuScene extends Scene {
+export default class TimeSelect extends Scene {
   #items: Array<MenuItem>;
 
   constructor(context: CanvasRenderingContext2D) {
     super(context);
     this.#items = [
-      new MenuItem("Iniciar", { x: WIDTH / 2, y: 150 }, () => {
-        SceneManager.getInstace().navigateToTimeSelect();
+      new MenuItem("30 segundos", { x: WIDTH / 2, y: 150 }, () => {
+        SceneManager.getInstace().navigateToGame(30000);
       }),
-      new MenuItem("Créditos", { x: WIDTH / 2, y: 250 }, () => {}),
-      new MenuItem("Sair", { x: WIDTH / 2, y: 350 }, () => {
-        console.log("Teste");
-        window.close();
+      new MenuItem("60 segundos", { x: WIDTH / 2, y: 225 }, () => {
+        SceneManager.getInstace().navigateToGame(60000);
+      }),
+      new MenuItem("90 segundos", { x: WIDTH / 2, y: 300 }, () => {
+        SceneManager.getInstace().navigateToGame(90000);
+      }),
+      new MenuItem("120 segundos", { x: WIDTH / 2, y: 375 }, () => {
+        SceneManager.getInstace().navigateToGame(120000);
+      }),
+      new MenuItem("10 segundos", { x: WIDTH / 2, y: 550 }, () => {
+        SceneManager.getInstace().navigateToGame(10000);
+      }),
+      new MenuItem("voltar", { x: 100, y: 0 }, () => {
+        SceneManager.getInstace().navigateToMenu();
       }),
     ];
   }
@@ -34,7 +44,7 @@ export default class MenuScene extends Scene {
 
   update = () => {
     this.drawImage(ImageLoader.loadImage("./img/background.png"), 0, 0);
-    this.drawText("Jogo do Antes e Depois", WIDTH / 2, 50, "center", 40);
+    this.drawText("Selecione o tempo", WIDTH / 2, 75, "center", 40);
     this.#items.forEach((item) => {
       const metrics = this.drawText(
         item.text,
