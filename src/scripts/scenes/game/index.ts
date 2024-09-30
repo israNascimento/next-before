@@ -124,6 +124,7 @@ export default class GameScene extends Scene {
         this.#generateOption();
         this.#canClick = false;
         clearTimeout(this.#timeoutResultGui);
+        clickedCard.resetShoulScale();
         setTimeout(() => {
           this.#canClick = true;
         }, TIMEOUT_RESULT);
@@ -142,9 +143,14 @@ export default class GameScene extends Scene {
   }
 
   #findClickedCard = (x: number, y: number) => {
-    console.log("findclick");
     return this.#cards.find((card) => {
       return card.hadClick(x, y);
+    });
+  };
+
+  override handleMouseMove = (x: number, y: number) => {
+    this.#cards.forEach((card) => {
+      card.handleMouseMove(x, y);
     });
   };
 
@@ -152,7 +158,12 @@ export default class GameScene extends Scene {
     this.#cards.forEach((card, index) => {
       const cardImage = ImageLoader.loadImage(`./img/${card.id}.png`);
       card.setPosition(this.#possiblesCardsPosition[index]);
-      this.drawImage(cardImage, card.position.x, card.position.y);
+      this.drawImage(
+        cardImage,
+        card.position.x,
+        card.position.y,
+        card.shouldScale
+      );
     });
   };
 

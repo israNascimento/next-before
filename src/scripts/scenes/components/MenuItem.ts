@@ -1,12 +1,4 @@
 import Coordinates from "../game/Coordinates";
-import { Position } from "../game/Types";
-
-type Rect = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
 
 export default class MenuItem {
   text: string;
@@ -15,13 +7,15 @@ export default class MenuItem {
   #metrics?: TextMetrics;
   onClick: () => void;
   #audio: HTMLAudioElement;
+  #shouldPlay: boolean;
 
   constructor(text: string, coordinates: Coordinates, onClick: () => void) {
     this.text = text;
     this.coordinates = coordinates;
     this.textColor = "white";
     this.onClick = onClick;
-    this.#audio = new Audio("./sounds/correct.mp3");
+    this.#audio = new Audio("./sounds/menu_item_box.wav");
+    this.#shouldPlay = true;
   }
 
   setMetrics(metrics: TextMetrics) {
@@ -52,20 +46,21 @@ export default class MenuItem {
     if (this.#calculatePositionMatches(x, y)) {
       this.textColor = "blue";
       try {
-        if (this.#audio.paused) {
+        if (this.#audio.paused && this.#shouldPlay) {
           this.#audio
             .play()
             .then()
             .catch((e) => {
               console.log(e);
             });
+          this.#shouldPlay = false;
         }
       } catch (e) {
         console.log(e);
       }
     } else {
-      this.#audio.pause();
       this.textColor = "white";
+      this.#shouldPlay = true;
     }
   }
 }

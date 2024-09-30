@@ -29,9 +29,20 @@ export default class Scene {
     this.#context.globalAlpha = 1;
   }
 
-  protected drawImage(bitmap: ImageBitmap, x: number, y: number): void {
+  protected drawImage(
+    bitmap: ImageBitmap,
+    x: number,
+    y: number,
+    scale: boolean = false
+  ): void {
     if (bitmap) {
-      this.#context.drawImage(bitmap, x, y);
+      this.#context.drawImage(
+        bitmap,
+        x,
+        y,
+        scale ? bitmap.width * 1.15 : bitmap.width,
+        scale ? bitmap.height * 1.15 : bitmap.height
+      );
     }
   }
 
