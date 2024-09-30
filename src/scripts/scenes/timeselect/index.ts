@@ -22,9 +22,6 @@ export default class TimeSelect extends Scene {
       new MenuItem("120 segundos", { x: WIDTH / 2, y: 375 }, () => {
         SceneManager.getInstace().navigateToGame(120000);
       }),
-      new MenuItem("10 segundos", { x: WIDTH / 2, y: 550 }, () => {
-        SceneManager.getInstace().navigateToGame(10000);
-      }),
       new MenuItem("voltar", { x: 100, y: 0 }, () => {
         SceneManager.getInstace().navigateToMenu();
       }),
