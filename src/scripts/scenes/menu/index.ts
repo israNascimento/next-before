@@ -13,10 +13,8 @@ export default class MenuScene extends Scene {
       new MenuItem("Iniciar", { x: WIDTH / 2, y: 150 }, () => {
         SceneManager.getInstace().navigateToTimeSelect();
       }),
-      new MenuItem("Créditos", { x: WIDTH / 2, y: 250 }, () => {}),
-      new MenuItem("Sair", { x: WIDTH / 2, y: 350 }, () => {
-        console.log("Teste");
-        window.close();
+      new MenuItem("Créditos", { x: WIDTH / 2, y: 250 }, () => {
+        SceneManager.getInstace().navigateToCredits();
       }),
     ];
   }

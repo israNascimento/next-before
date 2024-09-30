@@ -1,3 +1,4 @@
+import CreditsScene from "./credits/index";
 import FinishScene from "./finish/index";
 import GameScene from "./game/index";
 import MenuScene from "./menu/index";
@@ -12,7 +13,7 @@ export default class SceneManager {
   constructor(context: CanvasRenderingContext2D) {
     this.#context = context;
 
-    this.currentScene = new MenuScene(context);
+    this.currentScene = new FinishScene(context, 1000);
     setInterval(() => {
       this.currentScene.update();
     }, 25);
@@ -26,8 +27,12 @@ export default class SceneManager {
     this.currentScene = new TimeSelect(this.#context);
   };
 
-  navigateToEnd = () => {
-    this.currentScene = new FinishScene(this.#context);
+  navigateToCredits = () => {
+    this.currentScene = new CreditsScene(this.#context);
+  };
+
+  navigateToEnd = (points: number) => {
+    this.currentScene = new FinishScene(this.#context, points);
   };
 
   navigateToMenu = () => {

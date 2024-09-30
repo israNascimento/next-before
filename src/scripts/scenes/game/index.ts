@@ -58,7 +58,7 @@ export default class GameScene extends Scene {
     super.update();
     if (this.#timeLeft <= 50) {
       this.#backgroundSound.pause();
-      SceneManager.getInstace().navigateToEnd();
+      SceneManager.getInstace().navigateToEnd(this.#points);
     }
     this.#timeLeft -= GAME_UPDATE_INTERVAL;
     this.#drawBackground();
