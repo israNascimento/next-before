@@ -13,7 +13,7 @@ export default class SceneManager {
   constructor(context: CanvasRenderingContext2D) {
     this.#context = context;
 
-    this.currentScene = new FinishScene(context, 1000);
+    this.currentScene = new MenuScene(context);
     setInterval(() => {
       this.currentScene.update();
     }, 25);
