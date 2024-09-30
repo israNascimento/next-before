@@ -10,13 +10,14 @@ import {
   GAME_UPDATE_INTERVAL,
   SECOND_ROW_POS_Y,
   TIMEOUT_RESULT,
+  TIMEOUT_RESULT_GUI,
   WIDTH,
 } from "../../constants/Constants";
 import ImageLoader from "../../utils/ImageLoader";
 import Scene from "../Scene";
 import SceneManager from "../SceneManager";
 import Card from "./Card";
-import CardPosition from "./CardPosition";
+import Coordinates from "./Coordinates";
 import { Position, Result } from "./Types";
 
 export default class GameScene extends Scene {
@@ -27,10 +28,11 @@ export default class GameScene extends Scene {
     positionToDiscover: Position;
   };
   #points: number;
-  #possiblesCardsPosition: CardPosition[];
+  #possiblesCardsPosition: Coordinates[];
   #canClick: Boolean;
   #result?: Result;
   #backgroundSound: HTMLAudioElement;
+  #timeoutResultGui?: NodeJS.Timeout;
 
   constructor(context: CanvasRenderingContext2D) {
     super(context);
@@ -47,7 +49,7 @@ export default class GameScene extends Scene {
     this.#points = 0;
     this.#canClick = true;
     this.#backgroundSound = new Audio("./sounds/background.mp3");
-    this.#backgroundSound.volume = 0.7;
+    this.#backgroundSound.volume = 0.6;
     this.#backgroundSound.play();
   }
 
@@ -64,7 +66,7 @@ export default class GameScene extends Scene {
     this.#drawGui();
   };
 
-  #generatePositions = (index: number): CardPosition => {
+  #generatePositions = (index: number): Coordinates => {
     return {
       y: index < CARD_PER_ROW ? FIRST_ROW_POS_Y : SECOND_ROW_POS_Y,
       x:
@@ -95,7 +97,6 @@ export default class GameScene extends Scene {
   };
 
   override handleClick = (x: number, y: number) => {
-    console.log("handleClick");
     if (this.#canClick) {
       const clickedCard = this.#findClickedCard(x, y);
       if (clickedCard != undefined) {
@@ -122,10 +123,13 @@ export default class GameScene extends Scene {
         this.#shuffleCards();
         this.#generateOption();
         this.#canClick = false;
+        clearTimeout(this.#timeoutResultGui);
         setTimeout(() => {
           this.#canClick = true;
-          this.#result = undefined;
         }, TIMEOUT_RESULT);
+        this.#timeoutResultGui = setTimeout(() => {
+          this.#result = undefined;
+        }, TIMEOUT_RESULT_GUI);
       }
     }
   };
@@ -155,15 +159,17 @@ export default class GameScene extends Scene {
   #drawOption = () => {
     if (this.#currentOption) {
       this.drawText(
-        `Qual número vem ${this.#getPositionText()} de `,
+        `Qual o número ${this.#getPositionText()} do`,
         CARD_MARGIN,
         10,
         "left",
-        FONT_SIZE_GAME_OPTION
+        FONT_SIZE_GAME_OPTION,
+        "white",
+        true
       );
       this.drawImage(
         ImageLoader.loadImage(`./img/${this.#currentOption.option}.png`),
-        600,
+        650,
         CARD_MARGIN
       );
     }
@@ -206,16 +212,18 @@ export default class GameScene extends Scene {
           200,
           "center",
           40,
-          "#00FF00"
+          "#05e805",
+          true
         );
       } else {
         this.drawText(
-          `Ops... Você errou... Tente novamente =D`,
+          `Você errou... Tente novamente`,
           WIDTH / 2,
           200,
           "center",
           40,
-          "#FF0000"
+          "#FF0000",
+          true
         );
       }
     }

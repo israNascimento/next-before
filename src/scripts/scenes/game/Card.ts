@@ -1,15 +1,15 @@
 import { CARD_HEIGHT, CARD_WIDTH } from "../../constants/Constants";
-import CardPosition from "./CardPosition";
+import Coordinates from "./Coordinates";
 
 export default class Card {
   id: number;
-  position: CardPosition;
+  position: Coordinates;
 
   constructor(id: number) {
     this.id = id;
   }
 
-  setPosition(position: CardPosition) {
+  setPosition(position: Coordinates) {
     this.position = position;
   }
 

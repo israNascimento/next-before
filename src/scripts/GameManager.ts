@@ -18,6 +18,9 @@ class GameManager {
       },
       true
     );
+    this.#canvas.addEventListener("mousemove", (ev: MouseEvent) => {
+      this.#sceneManager.fowardMouseMove(ev.x, ev.y);
+    });
   }
 }
 

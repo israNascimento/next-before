@@ -7,6 +7,6 @@ export default class FinishScene extends Scene {
   };
 
   update = () => {
-    this.drawRect("blue");
+    // this.drawRect("blue");
   };
 }

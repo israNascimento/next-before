@@ -26,8 +26,11 @@ export default class SceneManager {
   };
 
   fowardClick = (x: number, y: number) => {
-    console.log("Foward");
     this.currentScene.handleClick(x, y);
+  };
+
+  fowardMouseMove = (x: number, y: number) => {
+    this.currentScene.handleMouseMove(x, y);
   };
 
   public static Instance(context: CanvasRenderingContext2D) {
